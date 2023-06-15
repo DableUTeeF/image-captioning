@@ -1,33 +1,33 @@
 {
-    "dataset_dir": "dataset",
-    "glove_dir": "glove_embeddings",
-    "dataset_path": ".\\dataset\\flick8k\\flickr_data.txt",
+    "dataset_dir": "/project/lt200060-capgen/palm/flickr8k",
+    "glove_dir": "/project/lt200060-capgen/palm/glove_embeddings",
+    "dataset_path": "/project/lt200060-capgen/palm/flickr8k/captions.txt",
 
     "split_images": {
-        "train": ".\\dataset\\flick8k\\Flickr_8k.trainImages.txt",
-        "validation": ".\\dataset\\flick8k\\Flickr_8k.devImages.txt",
-        "test": ".\\dataset\\flick8k\\Flickr_8k.testImages.txt"
+        "train": "/project/lt200060-capgen/palm/flickr8k/Flickr_8k.trainImages.txt",
+        "validation": "/project/lt200060-capgen/palm/flickr8k/Flickr_8k.devImages.txt",
+        "test": "/project/lt200060-capgen/palm/flickr8k/Flickr_8k.testImages.txt"
     },
     
     "split_save": {
-        "train": ".\\dataset\\flick8k\\train.txt",
-        "validation": ".\\dataset\\flick8k\\validation.txt",
-        "test": ".\\dataset\\flick8k\\test.txt"
+        "train": "/project/lt200060-capgen/palm/flickr8k/train.txt",
+        "validation": "/project/lt200060-capgen/palm/flickr8k/validation.txt",
+        "test": "/project/lt200060-capgen/palm/flickr8k/test.txt"
     },
 
-    "word2idx_path": ".\\dataset\\word2idx.json",
+    "word2idx_path": "/project/lt200060-capgen/palm/flickr8k/dataset/word2idx.json",
     "embeddings": {
-        "path": ".\\dataset\\embeddings.txt",
+        "path": "/project/lt200060-capgen/palm/flickr8k/dataset/embeddings.txt",
         "size": 100
     },
 
     "image_specs": {
         "image_dir": {
-            "train": ".\\dataset\\flick8k\\Images",
-            "validation": ".\\dataset\\flick8k\\Images",
-            "test": ".\\dataset\\flick8k\\Images"
+            "train": "/project/lt200060-capgen/palm/flickr8k/Images",
+            "validation": "/project/lt200060-capgen/palm/flickr8k/Images",
+            "test": "/project/lt200060-capgen/palm/flickr8k/Images"
         },
-        "img_feature_channels": 2048,
+        "img_feature_channels": 256,
         "image_size": 256
     },
 

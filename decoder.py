@@ -3,6 +3,57 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import TransformerDecoderLayer, TransformerDecoder
+from mmengine.config import Config
+from mmdet.apis import inference_detector, init_detector
+from mmdet.utils import get_test_pipeline_cfg
+from mmcv.transforms import Compose
+
+def get_activation(name, activation):
+    def hook(model, input, output):
+        activation[name] = output
+    return hook
+
+class DINOEncoder(nn.Module):
+    def __init__(self):
+        super().__init__()
+        config = Config.fromfile('/home/nhongcha/mmdetection/configs/dino/dino-4scale_r50_8xb2-12e_coco.py')
+        model = init_detector(
+            config,
+            '/project/lt200060-capgen/palm/parasites/cp/pretrained/dino-4scale_r50_8xb2-12e_coco_20221202_182705-55b2bba2.pth',
+            device='cuda'
+        )
+        self.max_per_img = 50
+
+        model.hooks = {}
+        model.bbox_head.reg_branches[-1][3].register_forward_hook(get_activation(f'reg_features', model.hooks))
+        model.bbox_head.cls_branches[-1].register_forward_hook(get_activation(f'cls_features', model.hooks))
+        self.model = model
+        config.test_dataloader.dataset = config.train_dataloader.dataset
+        self.transform = Compose(get_test_pipeline_cfg(config))
+
+    def forward(self, images):
+        data = {
+            'inputs': [],
+            'data_samples': []
+        }
+        for i in range(len(images)):
+            data_ = dict(img_path=images[i], img_id=i)
+            data_ = self.transform(data_)
+            data['inputs'].append(data_['inputs'])
+            data['data_samples'].append(data_['data_samples'])
+
+        with torch.no_grad():
+            self.model.test_step(data)
+        
+        reg = self.model.hooks[f'reg_features']
+        cls_score = self.model.hooks[f'cls_features']
+        # print(f'reg: {reg.size()} - cls_score: {cls_score.size()}')
+        scores, det_labels = F.softmax(cls_score, dim=-1)[..., :-1].max(-1)
+        scores, bbox_index = scores.topk(self.max_per_img)
+        # print(f'scores: {scores.size()} - bbox_index: {bbox_index.size()}')
+        output = torch.gather(reg, 1, bbox_index.unsqueeze(-1).expand(-1, -1, 256))
+        return output
+        # return reg[bbox_index.unsqueeze(-1).cpu()].cuda()
 
 
 class ResidualBlock(nn.Module):

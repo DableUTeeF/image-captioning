@@ -1,7 +1,7 @@
 import json
 
 import torch
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 
 from trainer import train
 

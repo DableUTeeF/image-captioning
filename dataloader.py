@@ -73,7 +73,7 @@ class Flickr8KDataset(Dataset):
             std=[0.229, 0.224, 0.225]
         )
         preprocessing = transforms.Compose([
-            transforms.Scale(256),
+            transforms.Resize(int(image_size*1.2)),
             transforms.CenterCrop(image_size),
             transforms.ToTensor(),
             normalize,
@@ -178,12 +178,13 @@ class Flickr8KDataset(Dataset):
             # Create a mini batch data
             for image_name, captions in caption_samples:
                 batch_captions.append(captions)
-                batch_imgs.append(self._load_and_prepare_image(image_name))
+                # batch_imgs.append(self._load_and_prepare_image(image_name))
+                batch_imgs.append(os.path.join(self.image_dir, image_name))
 
-            # Batch image tensors
-            batch_imgs = torch.stack(batch_imgs, dim=0)
-            if batch_size == 1:
-                batch_imgs = batch_imgs.unsqueeze(0)
+            # # Batch image tensors
+            # batch_imgs = torch.stack(batch_imgs, dim=0)
+            # if batch_size == 1:
+            #     batch_imgs = batch_imgs.unsqueeze(0)
 
             yield batch_imgs, batch_captions
 
@@ -195,7 +196,8 @@ class Flickr8KDataset(Dataset):
         image_id, tokens = self._data[index]
 
         # Load and preprocess image
-        image_tensor = self._load_and_prepare_image(image_id)
+        # image_tensor = self._load_and_prepare_image(image_id)
+        image_tensor = os.path.join(self.image_dir, image_id)
 
         # Pad the token and label sequences
         tokens = tokens[:self._max_len]
