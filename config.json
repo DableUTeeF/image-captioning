@@ -2,6 +2,7 @@
     "dataset_dir": "/project/lt200060-capgen/palm/flickr8k",
     "glove_dir": "/project/lt200060-capgen/palm/glove_embeddings",
     "dataset_path": "/project/lt200060-capgen/palm/flickr8k/captions.txt",
+    "feature_cache_dir": "/project/lt200060-capgen/palm/imagecaptioning/features",
 
     "split_images": {
         "train": "/project/lt200060-capgen/palm/flickr8k/Flickr_8k.trainImages.txt",

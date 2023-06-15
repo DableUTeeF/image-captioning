@@ -8,7 +8,8 @@ import torchvision.models as models
 from nltk.translate.bleu_score import corpus_bleu
 
 from dataloader import Flickr8KDataset
-from decoder import CaptionDecoder, DINOEncoder
+from decoder import CaptionDecoder
+from encoder import CachedDINOEncoder
 from utils.decoding_utils import greedy_decoding
 from utils.utils import save_checkpoint, log_gradient_norm, set_up_causal_mask
 
@@ -91,7 +92,7 @@ def train(config, writer, device):
     # Set up the encoder 
     #######################
 
-    encoder = DINOEncoder()
+    encoder = CachedDINOEncoder(regen=False, max_per_img=200)
 
     # encoder = models.resnet50(pretrained=True)
     # encoder = torch.nn.Sequential(*(list(encoder.children())[:-2]))
